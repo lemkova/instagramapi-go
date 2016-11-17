@@ -5,6 +5,7 @@ import (
     "strconv"
     "log"
     "io"
+    "errors"
 )
 
 type Agent struct {
@@ -23,7 +24,7 @@ func (a Agent) GetUagent() string {
   return a.uagent
 }
 
-func (a Agent) SendRequest(endpoint string, body io.Reader) (bool, *http.Response) {
+func (a Agent) SendRequest(endpoint string, body io.Reader) (error, *http.Response) {
   client := &http.Client{}
   if body == nil {
     r, _ := http.NewRequest("GET", endpoint, nil) 
@@ -35,14 +36,13 @@ func (a Agent) SendRequest(endpoint string, body io.Reader) (bool, *http.Respons
     r.Header.Add("User-Agent", a.uagent)
     res, err := client.Do(r)
     if err != nil {
-      log.Fatal(err)
-      return false, nil
+      return err, nil
     }
     if res.StatusCode != 200 {
-      log.Fatal("Unexpected Status Code: " + strconv.Itoa(res.StatusCode))
-      return false, nil
+      err := errors.New("Unexpected Status Code: " + strconv.Itoa(res.StatusCode))
+      return err, nil
     }
-    return true, res
+    return nil, res
   } else {
     r, _ := http.NewRequest("POST", endpoint, body)
     r.Header.Add("Connection", "close")
@@ -53,14 +53,13 @@ func (a Agent) SendRequest(endpoint string, body io.Reader) (bool, *http.Respons
     r.Header.Add("User-Agent", a.uagent)
     res, err := client.Do(r)
     if err != nil {
-      log.Fatal(err)
-      return false, nil
+      return err, nil
     }
     if res.StatusCode != 200 {
-      log.Fatal("Unexpected Status Code: " + strconv.Itoa(res.StatusCode))
-      return false, nil
+      err := errors.New("Unexpected Status Code: " + strconv.Itoa(res.StatusCode))
+      return err, nil
     }
-    return true, res
+    return nil, res
   }
 }
 
