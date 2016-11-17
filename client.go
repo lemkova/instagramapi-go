@@ -4,6 +4,7 @@ import (
       "./signature"
       "./igreq"
        
+      u "net/url"
       "strings"
       "fmt"
       "log"
@@ -24,6 +25,10 @@ type InstagramClient struct {
   uuid string
 }
 
+type Stage2 struct {
+  
+}
+
 func NewClient(user string, pass string) *InstagramClient {
   and_id := signature.GenerateDeviceID(user+pass)
   agent := igreq.NewAgent(uagent)
@@ -34,8 +39,8 @@ func NewClient(user string, pass string) *InstagramClient {
 func (i *InstagramClient) Login() bool {
   if i.isLogged != true {
     constant := &signature.Constants{}
-    url := fmt.Sprintf("%s%s%s", constant.GetApiEndpoint(), challange, signature.GenerateUUID(false))
-    err, res := i.agent.SendRequest(url, nil)
+    call := fmt.Sprintf("%s%s%s", constant.GetApiEndpoint(), challange, signature.GenerateUUID(false))
+    err, res := i.agent.SendRequest(call, nil)
     if err != nil {
       log.Fatal(err)
       return false
@@ -45,6 +50,9 @@ func (i *InstagramClient) Login() bool {
     csrf := strings.Replace(tok[0], "csrftoken=", "", -1)
     i.csrftoken = csrf
     //fmt.Println(csrf) //DEBUG
+    //Stage 2
+    data := u.Values{}
+    data.Set("data", 
     return true
   }
   return false
