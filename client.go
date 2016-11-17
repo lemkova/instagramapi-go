@@ -52,7 +52,7 @@ func (i *InstagramClient) Login() bool {
     //fmt.Println(csrf) //DEBUG
     //Stage 2
     data := u.Values{}
-    data.Set("data", 
+    data.Set("data", "test");
     return true
   }
   return false
