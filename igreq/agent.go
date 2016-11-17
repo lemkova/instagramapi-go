@@ -3,7 +3,6 @@ package igreq
 import (
     "net/http"
     "strconv"
-    "log"
     "io"
     "errors"
 )
