@@ -1,8 +1,8 @@
 package igapi
 
 import (
-      "./signature"
-      "./igreq"
+      "github.com/lemkova/instagramapi-go/signature"
+      "github.com/lemkova/instagramapi-go/igreq"
        
       u "net/url"
       "strings"
